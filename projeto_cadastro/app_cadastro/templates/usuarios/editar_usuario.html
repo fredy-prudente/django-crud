@@ -1,0 +1,12 @@
+{% extends 'usuarios/base.html' %}
+{% block conteudo %}
+<div class="container">
+    <h1>Editar Usuário</h1>
+    <form action="{% url 'editar_usuario' usuario.id_usuario %}" method="post">
+        {% csrf_token %}
+        Nome: <input type="text" name="nome" value="{{ usuario.nome }}">
+        Idade: <input type="number" name="idade" value="{{ usuario.idade }}">
+        <button type="submit">Atualizar</button>
+    </form>
+</div>
+{% endblock %}

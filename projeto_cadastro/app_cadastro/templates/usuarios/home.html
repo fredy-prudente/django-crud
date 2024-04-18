@@ -1,0 +1,49 @@
+{% extends 'usuarios/base.html' %}
+{% block conteudo %}
+    <div class="container">
+        <h1 class="mt-5 text-center">Cadastro de Usuários</h1>
+        <form id="cadastro-form" action="{% url 'adicionar_usuario' %}" method="post" class="mx-auto" style="max-width: 400px;">
+            {% csrf_token %}
+            <div class="form-group mt-4">
+                <label for="nome">Nome</label>
+                <input type="text" name="nome" id="nome" class="form-control">
+                <small id="nome-error" class="form-text text-danger"></small>
+            </div>
+            <div class="form-group mt-4">
+                <label for="idade">Idade</label>
+                <input type="number" name="idade" id="idade" class="form-control">
+                <small id="idade-error" class="form-text text-danger"></small>
+            </div>
+            <button type="button" id="submit-btn" class="btn btn-primary mt-4 btn-block">Enviar</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#submit-btn').on('click', function() {
+                var nome = $('#nome').val();
+                var idade = $('#idade').val();
+                
+                // Verifica se o campo de idade está vazio
+                if (idade === '') {
+                    $('#idade-error').text("Por favor, insira a idade.");
+                    return;
+                }
+                
+                // Realiza a requisição AJAX apenas se o campo de idade não estiver vazio
+                $.ajax({
+                    url: "{% url 'check-nome' %}",
+                    data: {nome: nome},
+                    success: function(response) {
+                        if (!response.disponivel) {
+                            $('#nome-error').text(response.mensagem);
+                        } else {
+                            $('#cadastro-form').submit();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
